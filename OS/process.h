@@ -4,18 +4,23 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <sstream>
 using namespace std;
 
 class Process {
 private:
-	vector<vector<int>> numHDD;
-	vector<vector<int>> numPrinters;
-	vector<vector<int>> numMem;
+	int PID;
+	int memSize;
+	int startIndex;
+	int endIndex;
 
 public:
-	Process();
+	Process(int, int);
 	~Process();
-	void display();
+	int getPID();
+	int getSize();
+	int getStart();
+	int getEnd();
+	void setStart(int);
+	void setEnd(int);
 };
 #endif

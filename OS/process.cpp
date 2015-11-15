@@ -35,3 +35,7 @@ void Process::setEnd(int index)
 {
 	endIndex = index;
 }
+bool Process::operator<(Process *pro)
+{
+	return (startIndex < pro->startIndex);
+}

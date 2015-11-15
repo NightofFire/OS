@@ -22,5 +22,6 @@ public:
 	int getEnd();
 	void setStart(int);
 	void setEnd(int);
+	bool operator<(Process*);
 };
 #endif

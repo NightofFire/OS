@@ -12,21 +12,38 @@ class System {
 private:
 	
 	int memSize;
-	vector<queue<int>> numHDD;
-	vector<queue<int>> numPrinters;
-	vector<Process> numMem;
-	vector<Process> readQueue;
+	vector<queue<Process*>> vHDD;
+	vector<queue<Process*>> vPrinters;
+	vector<Process*> processMem;
+	queue<Process*> readyQueue;
 	vector<Process*> CPU;
+	vector<Process*>::iterator it;
 
 public:
 	System(int,int,int);
 	~System();
 	void display();
-	void execPrinter();
-	void termPrinter();
-	void execHDD();
-	void termHDD();
-	void snapShot();
+	void termPro();
+	void execPrinter(int);
+	void termPrinter(int);
+	void execHDD(int);
+	void termHDD(int);
+	void snapShot(string);
+	void readyToCPU();
+	void toReadyQueue();
+	bool fitMem(int,int);
+	void allocateMem(Process *pro);
 	vector<Process*> &returnCPU();
+	vector<Process*> &returnList();
+	queue<Process*> &returnReadyQueue();
+	//bool cmd(Process*, Process*);
+	
+};
+
+struct comp {
+	bool operator()(Process * s1, Process * s2)
+	{
+		return s1->getStart() < s2->getStart();
+	}
 };
 #endif

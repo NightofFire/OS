@@ -1,3 +1,14 @@
+/*******************************************************************************
+Title          : cheng_pan-hwk1.cpp
+Author         : Cheng Pan
+Created on     : October 10, 2015
+Description    : Simulate OS
+Usage          : ./cheng_Pan-hwk1
+Build with     : g++ -o cheng_Pan-hwk1 cheng_Pan-hwk1.cpp system.cpp system.h
+process.cpp process .h
+Modifications  :
+*******************************************************************************/
+
 #ifndef PROCESS_H_
 #define PROCESS_H_
 

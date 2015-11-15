@@ -23,7 +23,7 @@ void System::display()
 	//cout << numPrinters.size() << " " << numPrinters[0].size() << endl;
 	//cout << memSize << endl;
 	//cout << readyQueue.empty() << endl;
-	cout << processMem.size() << endl;
+	cout << "memSize = " << processMem.size() << endl;
 	for (int i = 0; i < processMem.size(); i++)
 	{
 		cout << processMem[i]->getStart() << " " << processMem[i]->getEnd() << endl;
@@ -55,19 +55,19 @@ void System::allocateMem(Process *pro)
 			{
 				cout << "step do" << endl;
 				cout << "i = " << i << endl;
-				if (processMem[i]->getStart() - processMem[i - 1]->getEnd() - 1 > pro->getSize())
+				if (processMem[i]->getStart() - processMem[i - 1]->getEnd() - 1 >= pro->getSize())
 				{
 					cout << "step2" << endl;
 					pro->setStart(processMem[i - 1]->getEnd() + 1);
-					pro->setEnd(pro->getSize() + pro->getStart());
+					pro->setEnd(pro->getSize() + pro->getStart() - 1);
 					processMem.push_back(pro);
 					break;
 				}
-				else if (processMem[i + 1]->getSize() - processMem[i]->getEnd() - 1 > pro->getSize())
+				else if (processMem[i + 1]->getSize() - processMem[i]->getEnd() - 1 >= pro->getSize())
 				{
 					cout << "step5" << endl;
 					pro->setStart(processMem[i]->getEnd() + 1);
-					pro->setEnd(pro->getSize() + pro->getStart());
+					pro->setEnd(pro->getSize() + pro->getStart() - 1);
 					processMem.push_back(pro);
 					break;
 				}
@@ -116,13 +116,9 @@ void System::allocateMem(Process *pro)
 	sort(processMem.begin(), processMem.end(), comp());
 }
 
-void System::toReadyQueue()
-{
-
-}
 void System::termPro()
 {
-	cout << "testo 1 = " << processMem[0]->getSize() << endl;
+	//cout << "testo 1 = " << processMem[0]->getSize() << endl;
 	cout << processMem.size() << CPU.size() << endl;
 	it = processMem.begin();
 	for (int i = 0; i < processMem.size(); i++)
@@ -141,7 +137,7 @@ void System::termPro()
 	//delete returnCPU()[0];
 
 
-	cout << "testo 2 " <<processMem[0]->getSize() << endl;
+	//cout << "testo 2 " <<processMem[0]->getSize() << endl;
 }
 
 vector<Process*> &System::returnCPU()
@@ -168,16 +164,60 @@ void System::readyToCPU()
 	}
 }
 
+void System::toReadyQueue(string choice, int num)
+{
+	if (choice == "P" && !vPrinters[num].empty())
+	{
+		readyQueue.push(vPrinters[num].front());
+		vPrinters[num].pop();
+	}
+	else if (choice == "D" && !vHDD[num].empty())
+	{
+		readyQueue.push(vHDD[num].front());
+		vHDD[num].pop();
+	}
+}
 
 void System::execPrinter(int i)
 {
-	vPrinters[i].push(CPU[0]);
-	termPro();
+	if (!CPU.empty())
+	{
+		cout << " i === " << i << endl;
+		vPrinters[i].push(CPU[0]);
+		CPU.clear();
+		readyToCPU();
+		cout << "What is the file you want to write to?" << endl;
+		cin.ignore();
+		string fileName;
+		int fileSize;
+		getline(cin, fileName);
+		bool valid = false;
+		while (!valid)
+		{
+			cout << "What is the file size of the file? In bytes." << endl;
+			cin >> fileSize;
+			if (cin.fail())
+			{
+				cout << "Invalid size" << endl;
+				cin.clear();
+				std::cin.ignore(256, '\n');
+			}
+			else
+			{
+				valid = true;
+			}
+		}
+		vPrinters[i].front()->setFile("W", fileName, fileSize);
+	}
+	else
+	{
+		cout << "There is no process in the CPU" << endl;
+	}
 }
 
 void System::termPrinter(int i) 
 {
-	if (!vPrinters.empty())
+	if (!vPrinters[i].empty())
 	{
 		readyQueue.push(vPrinters[i].front());
 		vPrinters[i].pop();
@@ -189,13 +229,58 @@ void System::termPrinter(int i)
 }
 void System::execHDD(int i) 
 {
-	vHDD[i].push(CPU[0]);
-	termPro();
+	if (!CPU.empty())
+	{
+		vHDD[i].push(CPU[0]);
+		readyToCPU();
+		CPU.clear();
+		bool valid = false;
+		string mode;
+		while (!valid)
+		{
+			cout << "Enter 'r' to read. \n"
+					"Enter 'w' to write." << endl;
+			cin >> mode;
+			if (mode == "r" || mode == "w")
+			{
+			}
+			else
+			{
+				cerr << "Invalid" << endl;
+			}
+		}
+		valid = false;
+		cout << "What is the file you want to write to?" << endl;
+		string fileName;
+		int fileSize;
+		cin.ignore();
+		getline(cin, fileName);
+		while (!valid)
+		{
+			cout << "What is the file size of the file? In bytes." << endl;
+			cin >> fileSize;
+			if (cin.fail())
+			{
+				cout << "Invalid size" << endl;
+				cin.clear();
+				std::cin.ignore(256, '\n');
+			}
+			else
+			{
+				valid = true;
+			}
+		}
+		vHDD[i].front()->setFile(mode, fileName, fileSize);
+	}
+	else
+	{
+		cout << "There is no process in the CPU" << endl;
+	}
 }
 
 void System::termHDD(int i)
 {
-	if (!vHDD.empty())
+	if (!vHDD[i].empty())
 	{
 		readyQueue.push(vPrinters[i].front());
 		vHDD[i].pop();
@@ -232,54 +317,57 @@ bool System::fitMem(int size,int maxSize)
 	{
 		return true;
 	}
-	for (int i = 0; i < processMem.size(); i++)
+	else
 	{
-		cout << "i = " << i << " " << endl;
-		if (i == 0)
+		for (int i = 0; i < processMem.size(); i++)
 		{
-			if (processMem[i]->getStart() - 0 > size - 1)
+			cout << "i = " << i << " " << endl;
+			if (i == 0)
 			{
-				cout << "#1" << endl;
-				return true;
+				if (processMem[i]->getStart() - 0 > size - 1)
+				{
+					cout << "#1" << endl;
+					return true;
+				}
+				else if (processMem.size() == 1)
+				{
+					if (maxSize - processMem[i]->getEnd() > size)
+					{
+						return true;
+					}
+				}
+				else if (processMem.size() == 2 && i + 1 < processMem.size())
+				{
+					if (processMem[i + 1]->getStart() - processMem[i]->getEnd() > size)
+					{
+						cout << "#6" << endl;
+						return true;
+					}
+				}
 			}
-			else if (processMem.size() == 1)
+			else if (i + 1 != processMem.size())
+			{
+				cout << "#5" << endl;
+				if (processMem[i]->getStart() - processMem[i - 1]->getEnd() - 1 >= size)
+				{
+					cout << "#2" << endl;
+					return true;
+				}
+				else if (processMem[i + 1]->getStart() - processMem[i]->getEnd() > size)
+				{
+					cout << "#3" << endl;
+					return true;
+				}
+			}
+			//else if(process)
+			else if (i + 1 == processMem.size())
 			{
 				if (maxSize - processMem[i]->getEnd() > size)
 				{
-					return true;
-				}
-			}
-			else if (processMem.size() == 2 && i + 1 < processMem.size())
-			{
-				if (processMem[i + 1]->getStart() - processMem[i]->getEnd() > size)
-				{
-					cout << "#6" << endl;
-					return true;
-				}
-			}
-		}
-		else if(i + 1 != processMem.size())
-		{
-			cout << "5" << endl;
-			if (processMem[i]->getStart() - processMem[i - 1]->getEnd() - 1 > size)
-			{
-				cout << "#2" << endl;
-				return true;
-			}
-			else if (processMem[i + 1]->getStart() - processMem[i]->getEnd() > size)
-			{
-				cout << "#3" << endl;
-				return true;
-			}
-		}
-		//else if(process)
-		else if (i + 1 == processMem.size())
-		{
-			if (maxSize - processMem[i]->getEnd() > size)
-			{
-				cout << "4" << endl;
+					cout << "4" << endl;
 
-				return true;
+					return true;
+				}
 			}
 		}
 	}

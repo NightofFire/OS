@@ -28,11 +28,11 @@ public:
 	void termPrinter(int);
 	void execHDD(int);
 	void termHDD(int);
-	void snapShot(string);
-	void readyToCPU();
-	void toReadyQueue();
 	bool fitMem(int,int);
 	void allocateMem(Process *pro);
+	void readyToCPU();
+	void toReadyQueue(string,int);
+	void snapShot(string);
 	vector<Process*> &returnCPU();
 	vector<Process*> &returnList();
 	queue<Process*> &returnReadyQueue();

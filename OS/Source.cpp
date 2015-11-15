@@ -13,20 +13,34 @@ int main()
 	isdigit('3');
 	int numHDD, numPrinters, numMem;
 	string choice;
-	cout << "How many HDD system has?" << endl;
-	cin >> numHDD;
-	cout << "How many printers system have?" << endl;
-	cin >> numPrinters;
-	cout << "How many memory system have? In bytes" << endl;
-	cin >> numMem;
+	bool valid = false;
+	while (!valid)
+	{
+		cout << "How many HDDs does the system have?" << endl;
+		cin >> numHDD;
+		cout << "How many printers does the system have?" << endl;
+		cin >> numPrinters;
+		cout << "How much memory does the system have? In bytes" << endl;
+		cin >> numMem;
+		if (cin.fail())
+		{
+			cout << "Invalid number" << endl;
+			cin.clear();
+			std::cin.ignore(256, '\n');
+		}
+		else
+		{
+			valid = true;
+		}
+	}
 
 	System system(numHDD, numPrinters, numMem);
 	Process *process;
-
+	int pid = 0;
+	string snapMode;
 
 	while (choice != "Q" || choice != "q")
 	{
-		choice = "";
 		cout << "Enter 'A' to create a new process.\n"
 			"Enter 't' to terminate the process that is currently in the CPU. \n"
 			"Enter 'p<number>' to use the printer. \n"
@@ -99,8 +113,9 @@ int main()
 				cout << "Memory full" << endl;
 				continue;
 			}
-			process = new Process(rand() % 100, size);
+			process = new Process(pid, size);
 			system.allocateMem(process);
+			pid++;
 			//sort(system.returnList().begin(), system.returnList.end(), cmd);
 			if (system.returnCPU().empty())
 			{
@@ -123,7 +138,7 @@ int main()
 			}
 			else
 			{
-				cerr << "No more processes in the system" << endl;
+				cerr << "No more processes in the ReadyQueue/CPU" << endl;
 			}
 			//system.display();
 		}
@@ -134,12 +149,34 @@ int main()
 		else if (letter == "P")
 		{
 			system.termPrinter(num - 1);
+			system.toReadyQueue(letter, num - 1);
 		}
 		else if (letter == "d")
 		{
+			system.execHDD(num - 1);
 		}
 		else if (letter == "D")
 		{
+			system.termHDD(num - 1);
+			system.toReadyQueue(letter, num - 1);
+		}
+		else if (choice == "S")
+		{
+			cout << "You entered snapshot mode! \n"
+					"Enter 'r' to show the PIDs of the process in the readyQueue. \n"
+					"Enter 'p' to show the PIDs and printers information. \n"
+					"Enter 'd' to show the PIDs and disks information. \n"
+					"Enter 'm' to show the position of each process in memory." << endl;
+			cin >> snapMode;
+			if (snapMode == "r" || snapMode == "p" || snapMode == "d" || snapMode == "m" )
+			{
+				system.snapShot(snapMode);
+			}
+			else
+			{
+				cerr << "Invalid snapshot mode" << endl;
+				continue;
+			}
 		}
 		else if (choice == "Q" || choice == "q")
 		{

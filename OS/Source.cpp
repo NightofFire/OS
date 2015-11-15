@@ -22,7 +22,7 @@ int main()
 		cin >> numPrinters;
 		cout << "How much memory does the system have? In bytes" << endl;
 		cin >> numMem;
-		if (cin.fail())
+		if (cin.fail() && numMem < 2147483647)
 		{
 			cout << "Invalid number" << endl;
 			cin.clear();
@@ -123,7 +123,7 @@ int main()
 			}
 			else
 			{
-				system.returnReadyQueue().push(process);
+				system.returnReadyQueue().push_back(process);
 			}
 			system.display();
 		}

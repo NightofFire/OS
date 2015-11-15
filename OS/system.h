@@ -12,10 +12,10 @@ class System {
 private:
 	
 	int memSize;
-	vector<queue<Process*>> vHDD;
-	vector<queue<Process*>> vPrinters;
+	vector<deque<Process*>> vHDD;
+	vector<deque<Process*>> vPrinters;
 	vector<Process*> processMem;
-	queue<Process*> readyQueue;
+	deque<Process*> readyQueue;
 	vector<Process*> CPU;
 	vector<Process*>::iterator it;
 
@@ -35,7 +35,7 @@ public:
 	void snapShot(string);
 	vector<Process*> &returnCPU();
 	vector<Process*> &returnList();
-	queue<Process*> &returnReadyQueue();
+	deque<Process*> &returnReadyQueue();
 	//bool cmd(Process*, Process*);
 	
 };

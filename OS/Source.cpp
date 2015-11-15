@@ -16,21 +16,52 @@ int main()
 	bool valid = false;
 	while (!valid)
 	{
-		cout << "How many HDDs does the system have?" << endl;
-		cin >> numHDD;
-		cout << "How many printers does the system have?" << endl;
-		cin >> numPrinters;
-		cout << "How much memory does the system have? In bytes" << endl;
-		cin >> numMem;
-		if (cin.fail() && numMem < 2147483647)
+		while (!valid)
 		{
-			cout << "Invalid number" << endl;
-			cin.clear();
-			std::cin.ignore(256, '\n');
+			cout << "How many HDDs does the system have?" << endl;
+			cin >> numHDD;
+			if (cin.fail())
+			{
+				cout << "Invalid number" << endl;
+				cin.clear();
+				std::cin.ignore(256, '\n');
+			}
+			else
+			{
+				valid = true;
+			}
 		}
-		else
+		valid = false;
+		while (!valid)
 		{
-			valid = true;
+			cout << "How many printers does the system have?" << endl;
+			cin >> numPrinters;
+			if (cin.fail())
+			{
+				cout << "Invalid number" << endl;
+				cin.clear();
+				std::cin.ignore(256, '\n');
+			}
+			else
+			{
+				valid = true;
+			}
+		}
+		valid = false;
+		while (!valid)
+		{
+			cout << "How much memory does the system have? In bytes" << endl;
+			cin >> numMem;
+			if (cin.fail() || numMem > 2147483647 || numMem < 0)
+			{
+				cout << "Invalid number" << endl;
+				cin.clear();
+				std::cin.ignore(256, '\n');
+			}
+			else
+			{
+				valid = true;
+			}
 		}
 	}
 
@@ -70,14 +101,16 @@ int main()
 				{
 					num = stoi(choice.substr(1));
 					letter = choice[0];
-					if ((letter == "p" || letter == "P") && num <= numPrinters && num>0)
+					if ((letter == "p" || letter == "P") && num <= numPrinters && num >= 0)
 					{
 					}
-					else if ((letter == "d" || letter == "D") && num <= numPrinters && num > 0)
+					else if ((letter == "d" || letter == "D") && num <= numPrinters && num >= 0)
 					{
 					}
 					else
 					{
+						cin.clear();
+						std::cin.ignore(256, '\n');
 						cerr << "Invalid input" << endl;
 						continue;
 					}
@@ -86,6 +119,8 @@ int main()
 			}
 			else
 			{
+				cin.clear();
+				std::cin.ignore(256, '\n');
 				cerr << "Invalid input" << endl;
 				continue;
 			}
@@ -144,31 +179,59 @@ int main()
 		}
 		else if (letter == "p")
 		{
-			system.execPrinter(num - 1);	//since pos starts from 0, sub 1 from num
+			if (numPrinters == 0)
+			{
+				cerr << "There are no printers" << endl;
+			}
+			else
+			{
+				system.execPrinter(num - 1);	//since pos starts from 0, sub 1 from num
+			}
 		}
 		else if (letter == "P")
 		{
-			system.termPrinter(num - 1);
-			system.toReadyQueue(letter, num - 1);
+			if (numPrinters == 0)
+			{
+				cerr << "There are no printers" << endl;
+			}
+			else
+			{
+				system.termPrinter(num - 1);
+				system.toReadyQueue(letter, num - 1);
+			}
 		}
 		else if (letter == "d")
 		{
-			system.execHDD(num - 1);
+			if (numHDD == 0)
+			{
+				cerr << "There are no HDDs" << endl;
+			}
+			else
+			{
+				system.execHDD(num - 1);
+			}
 		}
 		else if (letter == "D")
 		{
-			system.termHDD(num - 1);
-			system.toReadyQueue(letter, num - 1);
+			if (numHDD == 0)
+			{
+				cerr << "There are no HDDs" << endl;
+			}
+			else
+			{
+				system.termHDD(num - 1);
+				system.toReadyQueue(letter, num - 1);
+			}
 		}
 		else if (choice == "S")
 		{
 			cout << "You entered snapshot mode! \n"
-					"Enter 'r' to show the PIDs of the process in the readyQueue. \n"
-					"Enter 'p' to show the PIDs and printers information. \n"
-					"Enter 'd' to show the PIDs and disks information. \n"
-					"Enter 'm' to show the position of each process in memory." << endl;
+				"Enter 'r' to show the PIDs of the process in the readyQueue. \n"
+				"Enter 'p' to show the PIDs and printers information. \n"
+				"Enter 'd' to show the PIDs and disks information. \n"
+				"Enter 'm' to show the position of each process in memory." << endl;
 			cin >> snapMode;
-			if (snapMode == "r" || snapMode == "p" || snapMode == "d" || snapMode == "m" )
+			if (snapMode == "r" || snapMode == "p" || snapMode == "d" || snapMode == "m")
 			{
 				system.snapShot(snapMode);
 			}
@@ -184,6 +247,8 @@ int main()
 		}
 		else
 		{
+			cin.clear();
+			std::cin.ignore(256, '\n');
 			cerr << "Invalid input" << endl;
 		}
 	}

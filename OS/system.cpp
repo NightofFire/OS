@@ -182,7 +182,7 @@ void System::execPrinter(int i)
 {
 	if (!CPU.empty())
 	{
-		cout << " i === " << i << endl;
+		//cout << " i === " << i << endl;
 		vPrinters[i].push_back(CPU[0]);
 		CPU.clear();
 		readyToCPU();
@@ -210,6 +210,10 @@ void System::execPrinter(int i)
 		vPrinters[i].back()->setFile("W", fileName, fileSize);
 		//cout << vPrinters[i].back()->returnFile();
 		//cout << " " << vPrinters[i].back()->returnFileSize() << endl;
+	}
+	else if (vPrinters.empty())
+	{
+		cerr << "There are no printers" << endl;
 	}
 	else
 	{

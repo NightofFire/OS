@@ -1,16 +1,17 @@
 /*******************************************************************************
 Title          : cheng_pan-hwk1.cpp
 Author         : Cheng Pan
-Created on     : October 10, 2015
+Created on     : November 12, 2015
 Description    : Simulate OS
 Usage          : ./cheng_Pan-hwk1
 Build with     : g++ -o cheng_Pan-hwk1 cheng_Pan-hwk1.cpp system.cpp system.h
-process.cpp process .h
-Modifications  :
+				 process.cpp process .h
+Created with   : Visual studio 2015
 *******************************************************************************/
 
 #include <iostream>
 #include <vector>
+#include <string>
 #include <stdlib.h> 
 #include <algorithm> 
 #include "system.h"

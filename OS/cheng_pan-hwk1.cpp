@@ -206,7 +206,8 @@ int main()
 			else
 			{
 				system.termPrinter(num - 1);
-				system.toReadyQueue(letter, num - 1);
+				//system.toReadyQueue(letter, num - 1);
+				system.readyToCPU();
 			}
 		}
 		else if (letter == "d")
@@ -229,7 +230,8 @@ int main()
 			else
 			{
 				system.termHDD(num - 1);
-				system.toReadyQueue(letter, num - 1);
+				//system.toReadyQueue(letter, num - 1);
+				system.readyToCPU();
 			}
 		}
 		else if (choice == "S")

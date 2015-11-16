@@ -168,26 +168,43 @@ vector<Process*> &System::returnList()
 
 void System::readyToCPU()
 {
-	if (!readyQueue.empty())
+	if (!readyQueue.empty() && CPU.empty())
 	{
 		CPU.push_back(readyQueue.front());
 		readyQueue.pop_front();
 	}
 }
-
+/*
 void System::toReadyQueue(string choice, int num)
 {
 	if (choice == "P" && !vPrinters[num].empty())
 	{
-		readyQueue.push_back(vPrinters[num].front());
-		vPrinters[num].pop_front();
+		if (CPU.empty())
+		{
+			CPU.push_back(vPrinters[num].front());
+			vPrinters[num].pop_front();
+		}
+		else
+		{
+			readyQueue.push_back(vPrinters[num].front());
+			vPrinters[num].pop_front();
+		}
 	}
 	else if (choice == "D" && !vHDD[num].empty())
 	{
-		readyQueue.push_back(vHDD[num].front());
-		vHDD[num].pop_front();
+		if (CPU.empty())
+		{
+			CPU.push_back(vHDD[num].front());
+			vHDD[num].pop_front();
+		}
+		else
+		{
+			readyQueue.push_back(vHDD[num].front());
+			vHDD[num].pop_front();
+		}
 	}
 }
+*/
 
 void System::execPrinter(int i)
 {
@@ -238,6 +255,7 @@ void System::termPrinter(int i)
 	{
 		readyQueue.push_back(vPrinters[i].front());
 		vPrinters[i].pop_front();
+		readyToCPU();
 	}
 	else
 	{
@@ -249,8 +267,8 @@ void System::execHDD(int i)
 	if (!CPU.empty())
 	{
 		vHDD[i].push_back(CPU[0]);
-		readyToCPU();
 		CPU.clear();
+		readyToCPU();
 		bool valid = false;
 		string mode;
 		while (!valid)
@@ -290,6 +308,10 @@ void System::execHDD(int i)
 		}
 		vHDD[i].front()->setFile(mode, fileName, fileSize);
 	}
+	else if (vHDD.empty())
+	{
+		cerr << "There are no HDDs" << endl;
+	}
 	else
 	{
 		cout << "There is no process in the CPU" << endl;
@@ -302,6 +324,7 @@ void System::termHDD(int i)
 	{
 		readyQueue.push_back(vPrinters[i].front());
 		vHDD[i].pop_front();
+		readyToCPU();
 	}
 	else
 	{
@@ -326,7 +349,7 @@ void System::snapShot(string letter)
 	{
 		for (int i = 0; i < vHDD.size(); i++)
 		{
-			cout << "Printer " << " " << i + 1 << ":" << endl;
+			cout << "HDD " << " " << i + 1 << ":" << endl;
 			for (int j = 0; j < vHDD[i].size(); j++)
 			{
 				cout << "PID - " << vHDD[i][j]->getPID() << ", " << vHDD[i][j]->returnFile() 

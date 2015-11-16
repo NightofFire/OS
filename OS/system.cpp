@@ -4,8 +4,7 @@ Author         : Cheng Pan
 Created on     : November 12, 2015
 Description    : Simulate OS
 Usage          : ./cheng_pan-hwk1
-Build with     : g++ -o cheng_pan-hwk1 cheng_pan-hwk1.cpp system.cpp system.h
-			     process.cpp process.h
+Build with     : g++ -o cheng_pan-hwk1 cheng_pan-hwk1.cpp system.cpp process.cpp
 Created with   : Visual studio 2015
 *******************************************************************************/
 

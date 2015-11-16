@@ -319,7 +319,7 @@ void System::snapShot(string letter)
 			for (int j = 0; j < vPrinters[i].size(); j++)
 			{
 				cout << "PID - " << vPrinters[i][j]->getPID() << ", " << vPrinters[i][j]->returnFile() 
-					 << ", " << vPrinters[i][j]->returnFileSize() << " bytes, " << vPrinters[i][j]->retrunMode() << "." << endl;
+					 << ", " << vPrinters[i][j]->returnFileSize() << " bytes, " <<"mode="<< vPrinters[i][j]->retrunMode() << "." << endl;
 			}
 		}
 	}
@@ -331,7 +331,7 @@ void System::snapShot(string letter)
 			for (int j = 0; j < vHDD[i].size(); j++)
 			{
 				cout << "PID - " << vHDD[i][j]->getPID() << ", " << vHDD[i][j]->returnFile() 
-					 << ", " << vHDD[i][j]->returnFileSize() << " bytes, "<< vHDD[i][j]->retrunMode()<<"." << endl;
+					 << ", " << vHDD[i][j]->returnFileSize() << " bytes, "<< "mode="<<vHDD[i][j]->retrunMode()<<"." << endl;
 			}
 		}
 	}

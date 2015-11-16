@@ -124,7 +124,7 @@ int main()
 						cerr << "Invalid input" << endl;
 						continue;
 					}
-					cout << num << endl;
+					//cout << num << endl;
 				}
 			}
 			else

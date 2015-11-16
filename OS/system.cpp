@@ -261,6 +261,7 @@ void System::execHDD(int i)
 			cin >> mode;
 			if (mode == "r" || mode == "w")
 			{
+				valid = true;
 			}
 			else
 			{

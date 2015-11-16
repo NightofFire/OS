@@ -177,9 +177,9 @@ int main()
 			if (!system.returnCPU().empty())
 			{
 				system.termPro();
-				cout << system.returnCPU().empty() << endl;
+				//cout << system.returnCPU().empty() << endl;
 				system.readyToCPU();	//move first process in readyqueue to CPU
-				cout << system.returnCPU().empty() << endl;
+				//cout << system.returnCPU().empty() << endl;
 			}
 			else
 			{
